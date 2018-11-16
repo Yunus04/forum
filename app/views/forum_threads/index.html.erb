@@ -1,0 +1,53 @@
+<style type="text/css">
+.meta {
+	margin-bottom: 10px;
+
+}
+
+.contetn {
+	margin-bottom: 10px;
+}
+
+.count {
+	float: right;
+	margin-bottom: 10px;
+}
+
+.thread {
+	margin-bottom: 20px;
+	border-bottom: 1px solid #000000;
+}
+</style>
+
+<div class="row">
+  <div class="col-md-3 col-md-offset-3"></div>
+  <div class="col-md-6 col-md-offset-3">
+
+<div style="margin-bottom: 10px;">
+  <% if user_signed_in? %>
+      <%= link_to "Buat Diskusi", new_forum_thread_path, class: 'btn btn-primary' %></br>
+      <% end %>
+</div>
+
+    <% @threads.each do |t| %>
+
+  	 <div class="thread">
+    		<h4> <%= link_to t.title.titleize, forum_thread_path(t) %></h4>
+
+    		<div class="meta">
+          <%= t.created_at.strftime("%d %B %Y") %> oleh <%= t.user.name %>
+    		</div>
+
+    		<div class="contet">
+    			<%= t.content %>
+    		</div>
+    		<div class="count">
+    			<%= t.forum_posts_count %> Obrolan
+    		</div>
+    		<div style="clear: both; "></div>
+    	</div>
+    <% end %>
+  </div>
+</div>
+
+
