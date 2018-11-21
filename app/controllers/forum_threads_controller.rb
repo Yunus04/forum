@@ -4,7 +4,7 @@ class ForumThreadsController < ApplicationController
 
 	def index
 		if params[:search]
-			@threads = ForumThread.where('title like ?', "%#{params[:search]}%").paginate(per_page: 5, page: params[:page]) 
+			@threads = ForumThread.where('title ilike ?', "%#{params[:search]}%").paginate(per_page: 5, page: params[:page]) 
 			else
 				@threads = ForumThread.order(sticy_order: :asc).order(id: :desc).paginate(per_page: 5, page: params[:page])
 		end
