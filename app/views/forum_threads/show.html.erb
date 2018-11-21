@@ -19,6 +19,10 @@
 	border-bottom: 1px solid #000000;
 }
 
+.action {
+  float: none;
+}
+
 </style>
 
 <div class="row">
@@ -38,13 +42,19 @@
     		<div class="contet">
     			<%= @thread.content %>
     		</div>
-    	   		 <div style="clear: both; "></div>
+
+        <% if policy(@thread).edit? %>
+    	  <div class="action">
+          <%= link_to 'Edit', edit_forum_thread_path(@thread), class: 'btn' %> |
+           <%= link_to 'Delete', forum_thread_path(@thread), method: :delete, data: {confirm: 'Apakah anda yakin ingi menghapus data ini?'}, class: 'btn' %>
+        </div>
+        <% end %>
     		
     	</div>
 
 
 <% if @thread.forum_posts.any? %>
-<% @thread.forum_posts.each do |p| %>
+<% @posts.each do |p| %>
 
   	 <div class="thread">
   
@@ -61,7 +71,7 @@
     </div>
   
 <% end %>
-
+ <%= will_paginate @posts, renderer: BootstrapPagination::Rails  %>
 <% else %>
 <div>
 	Jadilah orang pertama yang melakukan tanggapan
@@ -85,7 +95,7 @@
     </div>
 
     <div class="form-group">
-      <%= f.submit "Submite", class: 'btn btn-primary form-control' %>
+      <%= f.submit "Tanggapi", class: 'btn btn-primary form-control' %>
     </div>
 <% end %>
 <% end %>

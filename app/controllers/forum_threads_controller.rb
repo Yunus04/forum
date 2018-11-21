@@ -3,12 +3,17 @@ class ForumThreadsController < ApplicationController
 	before_action :authenticate_user!, only: [:new, :create]
 
 	def index
-		@threads = ForumThread.order(id: :desc)
+		if params[:search]
+			@threads = ForumThread.where('title like ?', "%#{params[:search]}%").paginate(per_page: 5, page: params[:page]) 
+			else
+				@threads = ForumThread.order(sticy_order: :asc).order(id: :desc).paginate(per_page: 5, page: params[:page])
+		end
 	end
 
 	def show
-		@thread = ForumThread.find(params[:id])
+		@thread = ForumThread.friendly.find(params[:id])
 		@post = ForumPost.new
+		@posts = @thread.forum_posts.paginate(per_page: 3, page: params[:page])
 	end
 
 	def new
@@ -23,8 +28,39 @@ class ForumThreadsController < ApplicationController
 			redirect_to root_path
 		else
 			render 'new'
-		end
+	end
 
+	end
+
+	def pinit
+		@thread = ForumThread.friendly.find(params[:id])
+		@thread.pinit!
+		redirect_to root_path
+	end
+
+	def edit
+		@thread = ForumThread.friendly.find(params[:id])
+		authorize @thread
+	end
+
+	def destroy
+		@thread = ForumThread.friendly.find(params[:id])
+		authorize @thread
+
+		@thread.destroy
+		redirect_to root_path, notice: 'Thread berhasil di hapus'
+	end	
+
+	def update
+		@thread = ForumThread.friendly.find(params[:id])
+		authorize @thread
+		
+		if @thread.update(resource_params)
+			
+			redirect_to forum_thread_path(@thread)
+		else
+			render 'new'
+		end	
 	end
 
 	private

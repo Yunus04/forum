@@ -17,6 +17,10 @@
 	margin-bottom: 20px;
 	border-bottom: 1px solid #000000;
 }
+
+.action {
+  float: left;
+}
 </style>
 
 <div class="row">
@@ -32,21 +36,32 @@
     <% @threads.each do |t| %>
 
   	 <div class="thread">
-    		<h4> <%= link_to t.title.titleize, forum_thread_path(t) %></h4>
+    		<h4> <%= link_to t.title.titleize, forum_thread_path(t) %> 
+
+          <% if t.sticy? %>
+          <span class="glyphicon glyphicon-pushpin"></span></h4>
+          <% end %>
 
     		<div class="meta">
           <%= t.created_at.strftime("%d %B %Y") %> oleh <%= t.user.name %>
     		</div>
 
     		<div class="contet">
-    			<%= t.content %>
+    			<%= truncate t.content, length: 150 %>
     		</div>
+        <% if user_signed_in? %>
+        <div class="action">
+          <%= link_to 'Pin it', pinit_forum_thread_path(t), class: 'btn', method: :put  %>
+        </div>
+        <% end %>
     		<div class="count">
     			<%= t.forum_posts_count %> Obrolan
     		</div>
     		<div style="clear: both; "></div>
     	</div>
     <% end %>
+
+    <%= will_paginate @threads, renderer: BootstrapPagination::Rails  %>
   </div>
 </div>
 

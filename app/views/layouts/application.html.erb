@@ -28,7 +28,8 @@
    <div class='container'>
     <% flash.each do |key, value| %>
     <div class="alert alert-<%= key %>">
-      <%= value %>
+
+  <span> <%= value %></span>   
       <% end %>
       
     </div>
